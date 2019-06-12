@@ -1,0 +1,9 @@
+/sln/.vs
+
+/sln/ServiceSample/bin/debug
+/sln/ServiceSample/bin/release
+/sln/ServiceSample/obj
+
+/sln/ServiceSelfInstaller/bin/debug
+/sln/ServiceSelfInstaller/bin/release
+/sln/ServiceSelfInstaller/obj
