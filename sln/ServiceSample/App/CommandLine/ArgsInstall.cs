@@ -25,6 +25,11 @@ namespace ServiceSample.App.CommandLine
 		[ArgDefaultValue(ServiceStartMode.Automatic)]
 		public ServiceStartMode StartMode { get; set; }
 
+		[ArgShortcut(ArgShortcutPolicy.NoShortcut)]
+		[ArgDefaultValue(false)]
+		[ArgDescription("Démarre automatiquement le service après l'installation.")]
+		public bool Start { get; set; }
+
 		[ArgNotEmptyOrWhiteSpace()]
 		[ArgShortcut("a")]
 		[ArgDefaultValue(ServiceAccount.NetworkService)]
@@ -53,6 +58,7 @@ namespace ServiceSample.App.CommandLine
 				Description = this.Description,
 				DisplayName = this.DisplayName,
 				Password = this.Password,
+				Start = this.Start,
 				StartMode = this.StartMode,
 				UserName = this.UserName
 			};

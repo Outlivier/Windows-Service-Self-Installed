@@ -123,4 +123,10 @@
   <data name="InstallArgs_CreateProcessInstaller_ArgsNullEx" xml:space="preserve">
     <value>Les arguments {0} de l'installation sont nul. Vérifier que le constructeur approprié de la classe {1} a été appelé. </value>
   </data>
+  <data name="ServiceSelfInstaller_OnAfterInstall_Start" xml:space="preserve">
+    <value>Démarrage du service...</value>
+  </data>
+  <data name="ServiceSelfInstaller_OnBeforeUninstall_Stop" xml:space="preserve">
+    <value>Arrêt du service...</value>
+  </data>
 </root>

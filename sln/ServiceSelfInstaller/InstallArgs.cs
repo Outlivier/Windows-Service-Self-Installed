@@ -31,6 +31,9 @@ namespace ServiceSelfInstaller
 		public string DisplayName { get; set; }
 		public string Description { get; set; }
 		public ServiceStartMode StartMode { get; set; } = ServiceStartMode.Automatic;
+		
+		/// <summary>Démarre automatiquement le service après l'installation (ce qui n'est pas fait par Windows).</summary>
+		public bool Start { get; set; } = false;
 
 		/// <summary>
 		/// <para>Compte avec lequel le service sera exécuté.</para>

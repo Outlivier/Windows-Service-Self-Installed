@@ -9,7 +9,7 @@ namespace ServiceSample
 {
 	static class Program
 	{
-		public static string ServiceName => ConfigurationManager.AppSettings[ServiceInstallRunner.ServiceNameAppSettingsKey] ?? "AServiceSample";
+		public static string ServiceName => ConfigurationManager.AppSettings[ServiceInstallRunner.ServiceNameAppSettingsKey] ?? "1_ServiceSample";
 		public static ServiceInstallRunner Installer { get; set; } = new ServiceInstallRunner();
 
 

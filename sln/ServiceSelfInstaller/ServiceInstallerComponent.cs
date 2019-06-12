@@ -27,6 +27,7 @@ namespace ServiceSelfInstaller
 			InitializeComponent();
 
 			// Bind des évènements
+			BeforeUninstall += new InstallEventHandler(OnBeforeUninstall);
 			AfterInstall += new InstallEventHandler(OnAfterInstall);
 
 			// Récupération des paramètres
@@ -45,6 +46,9 @@ namespace ServiceSelfInstaller
 			this.Args = args ?? throw new ArgumentNullException(nameof(args));
 		}
 		#endregion
+
+
+		private static void Log(string message) => Console.WriteLine(message);
 
 
 		private static void LogDebug(string message)
@@ -131,7 +135,17 @@ namespace ServiceSelfInstaller
 		{
 			// TODO : Recovery Actions
 			// TODO : Générer une exception pour être sur que RollBack est appelé.
-			// TODO : Démarrer le service
+			
+			//) Démarre le service
+			if (Args.Start)
+			{
+				Log(Locale.ServiceSelfInstaller_OnAfterInstall_Start);
+				using (var sc = new ServiceController(Args.Name))
+				{
+					sc.Start();
+					// Inutile d'attendre le démarrage du service
+				}
+			}
 
 			//try
 			//{
@@ -144,20 +158,6 @@ namespace ServiceSelfInstaller
 			//catch (Exception ex)
 			//{
 			//	LogManager.Instance.LogSlow(LogLevel.Error, string.Format("Error when configuring recovery actions for {0} !", _serviceName));
-			//}
-
-			// TODO : Démarrage du service
-			//try
-			//{
-			//	if ((this.CommandLine.Start))
-			//	{
-			//		ServiceController sc = new ServiceController(_serviceName);
-			//		sc.Start();
-			//	}
-			//}
-			//catch (Exception ex)
-			//{
-			//	LogManager.Instance.LogSlow(LogLevel.Error, string.Format("Error when starting {0} !", _serviceName));
 			//}
 		}
 
@@ -204,7 +204,23 @@ namespace ServiceSelfInstaller
 		#endregion
 
 
-		#region Uninstall	
+		#region Uninstall
+		/// <summary>
+		/// Sous Windows 10, la désinstallation ne fonctionne pas si le service est démarré.
+		/// </summary>
+		private void OnBeforeUninstall(object sender, InstallEventArgs e)
+		{
+			Log(Locale.ServiceSelfInstaller_OnBeforeUninstall_Stop);
+			using (var sc = new ServiceController(this.ServiceName))
+			{
+				if ((sc.Status != ServiceControllerStatus.Stopped) && (sc.Status != ServiceControllerStatus.StopPending))
+				{
+					sc.Stop();
+				}
+				sc.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(30));
+			}
+		}
+
 		public override void Uninstall(IDictionary savedState)
 		{
 			Installers.Add(new ServiceProcessInstaller());

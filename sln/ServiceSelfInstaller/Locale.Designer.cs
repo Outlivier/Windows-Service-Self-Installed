@@ -77,5 +77,23 @@ namespace ServiceSelfInstaller {
                 return ResourceManager.GetString("InstallArgs_CreateProcessInstaller_ArgsNullEx", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Démarrage du service....
+        /// </summary>
+        internal static string ServiceSelfInstaller_OnAfterInstall_Start {
+            get {
+                return ResourceManager.GetString("ServiceSelfInstaller_OnAfterInstall_Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Arrêt du service....
+        /// </summary>
+        internal static string ServiceSelfInstaller_OnBeforeUninstall_Stop {
+            get {
+                return ResourceManager.GetString("ServiceSelfInstaller_OnBeforeUninstall_Stop", resourceCulture);
+            }
+        }
     }
 }

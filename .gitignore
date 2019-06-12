@@ -1,3 +1,5 @@
+*.user
+
 /sln/.vs
 
 /sln/ServiceSample/bin/debug
