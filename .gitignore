@@ -9,3 +9,7 @@
 /sln/ServiceSelfInstaller/bin/debug
 /sln/ServiceSelfInstaller/bin/release
 /sln/ServiceSelfInstaller/obj
+
+/sln/ServiceTests/bin/debug
+/sln/ServiceTests/bin/release
+/sln/ServiceTests/obj
