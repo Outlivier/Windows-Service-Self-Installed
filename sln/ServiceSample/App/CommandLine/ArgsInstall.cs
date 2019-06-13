@@ -1,5 +1,6 @@
 ﻿using PowerArgs;
 using System.ServiceProcess;
+using System;
 
 namespace ServiceSample.App.CommandLine
 {
@@ -49,6 +50,12 @@ namespace ServiceSample.App.CommandLine
 		[ArgShortcut("p")]
 		public string Password { get; set; }
 
+		[ArgNotEmptyOrWhiteSpace()]
+		[ArgShortcut("scf")]
+		[ArgDescription("Ligne de commande permettant de changer les options de récupération du service." +
+			" Taper \"sc failure -?\" pour voir la syntaxe de la commande. Pour échapper les guillemets, utiliser \\ (voir les exemples).")]
+		public string SCFailure { get; set; }
+
 
 		public ServiceSelfInstaller.InstallArgs ToServiceArgs()
 		{
@@ -58,6 +65,7 @@ namespace ServiceSample.App.CommandLine
 				Description = this.Description,
 				DisplayName = this.DisplayName,
 				Password = this.Password,
+				SCFailure = this.SCFailure,
 				Start = this.Start,
 				StartMode = this.StartMode,
 				UserName = this.UserName

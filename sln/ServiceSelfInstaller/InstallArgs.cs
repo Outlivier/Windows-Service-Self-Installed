@@ -51,5 +51,7 @@ namespace ServiceSelfInstaller
 		/// est une chaîne en clair.
 		/// </remarks>
 		public string Password { get; set; }
+
+		public string SCFailure { get; set; }
 	}
 }

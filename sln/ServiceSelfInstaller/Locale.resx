@@ -123,6 +123,9 @@
   <data name="InstallArgs_CreateProcessInstaller_ArgsNullEx" xml:space="preserve">
     <value>Les arguments {0} de l'installation sont nul. Vérifier que le constructeur approprié de la classe {1} a été appelé. </value>
   </data>
+  <data name="ServiceInstallerComponent_StartSC_Error" xml:space="preserve">
+    <value>L'outil Sc.exe s'est terminé avec le code d'erreur {0}.</value>
+  </data>
   <data name="ServiceSelfInstaller_OnAfterInstall_Start" xml:space="preserve">
     <value>Démarrage du service...</value>
   </data>

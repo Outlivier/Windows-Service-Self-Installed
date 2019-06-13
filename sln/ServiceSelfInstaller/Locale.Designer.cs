@@ -79,6 +79,15 @@ namespace ServiceSelfInstaller {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à L&apos;outil Sc.exe s&apos;est terminé avec le code d&apos;erreur {0}..
+        /// </summary>
+        internal static string ServiceInstallerComponent_StartSC_Error {
+            get {
+                return ResourceManager.GetString("ServiceInstallerComponent_StartSC_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Démarrage du service....
         /// </summary>
         internal static string ServiceSelfInstaller_OnAfterInstall_Start {

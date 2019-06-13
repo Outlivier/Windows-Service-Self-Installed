@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Configuration.Install;
-using System.Linq;
+using System.Diagnostics;
+using System.Globalization;
 using System.Reflection;
 using System.ServiceProcess;
-using System.Threading.Tasks;
-using System.Globalization;
+using static System.FormattableString;
 
 namespace ServiceSelfInstaller
 {
@@ -116,10 +115,31 @@ namespace ServiceSelfInstaller
 		/// </exception>
 		public override void Rollback(IDictionary savedState)
 		{
-			// TODO : Faut-il comme pour uninstall spécifier le nom du service ?
-			// Générer une erreur lors de la désinstallation pour vérifier
+			// N'est appelé qu'en cas de problème lors de l'installation. N'est pas appelé lors de la désinstallation.
 			base.Rollback(savedState);
 		}
+
+
+		private static void StartSC(string args)
+		{
+			int exitCode;
+			Log("sc " + args);
+			using (var process = new Process())
+			{
+				var startInfo = process.StartInfo;
+				startInfo.FileName = "sc";
+				startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+				startInfo.Arguments = args;
+
+				process.Start();
+				process.WaitForExit();
+
+				exitCode = process.ExitCode;
+			}
+
+			if (exitCode != 0) { throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, Locale.ServiceInstallerComponent_StartSC_Error, exitCode)); }
+		}
+
 
 		/// <summary>
 		/// Si demandé par la ligne de commande :
@@ -133,9 +153,13 @@ namespace ServiceSelfInstaller
 		/// <param name="e"><see cref="InstallEventArgs"/> qui contient les données d'événement.</param>
 		private void OnAfterInstall(object sender, InstallEventArgs e)
 		{
-			// TODO : Recovery Actions
-			// TODO : Générer une exception pour être sur que RollBack est appelé.
-			
+			//) Recovery Actions
+			if (!string.IsNullOrWhiteSpace(Args.SCFailure))
+			{
+				// A noter que l'on échappe pas les " dans le nom du service (qui nomerait un service avec des guillemets ?
+				StartSC(Invariant($"failure {Args.Name} {Args.SCFailure}")); 
+			}
+
 			//) Démarre le service
 			if (Args.Start)
 			{
@@ -146,19 +170,6 @@ namespace ServiceSelfInstaller
 					// Inutile d'attendre le démarrage du service
 				}
 			}
-
-			//try
-			//{
-			//	if ((this.CommandLine.RecoveryActions != null))
-			//	{
-			//		RecoveryConfigure.ChangeSettings(_serviceName, this.CommandLine.RecoveryActions);
-			//		LogManager.Instance.LogSlow(LogLevel.Info, string.Format("Recovery actions configured for {0}.", _serviceName));
-			//	}
-			//}
-			//catch (Exception ex)
-			//{
-			//	LogManager.Instance.LogSlow(LogLevel.Error, string.Format("Error when configuring recovery actions for {0} !", _serviceName));
-			//}
 		}
 
 

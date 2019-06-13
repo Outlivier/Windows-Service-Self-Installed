@@ -16,9 +16,16 @@ namespace ServiceSample.App.CommandLine
 	/// </remarks>
 	[ArgExceptionBehavior(ArgExceptionPolicy.StandardExceptionHandling)]
 	[ArgIgnoreCase(ignore: true)]
-	[ArgExample("MyApplication.Cli.exe", "Exécute le service :")]
-	[ArgExample("MyApplication.Cli.exe -Version", "Affiche le n° de version :")]
-	[ArgExample("MyApplication.Cli.exe Uninstall", "Désinstalle le service :")]
+	[ArgExample("ServiceSample.exe", "Exécute le service :")]
+	[ArgExample("ServiceSample.exe -Version", "Affiche le n° de version :")]
+	[ArgExample("ServiceSample.exe Install -n \"OtherServiceName\"", "Installe le service avec un nom différent :")]
+	[ArgExample(@"ServiceSample.exe i -scf ""reset= 172800 actions= restart/180000/run/300000/restart/0 command= \""powershell -command gci | Out-File \\\""C:\_\Un fichier.txt\\\"";\""""",
+		"Définit les options de récupérations en lançant la commande dans une fenêtre DOS. On montre ici comment échapper les guillements dans les arguments de la commande sc.exe, " +
+		"et dans le paramètre scf du service :")]
+	[ArgExample(@"&"".\ServiceSample.exe"" install -scf 'reset= 172800 actions= restart/180000/run/300000/restart/0 command= \""powershell -command gci | Out-File \\\""C:\_\Un fichier.txt\\\"";\""'",
+		"Définit les options de récupérations en lançant la commande dans une fenêtre PowerShell. On montre ici comment échapper les guillements dans les arguments de la commande sc.exe, " +
+		"et dans le paramètre scf du service, et en utilisant les simples Quotes PowerShell :")]
+	[ArgExample("ServiceSample.exe Uninstall", "Désinstalle le service :")]
 	public class Args
 	{
 		/// <remarks>A mettre en premier avant les autres arguments.</remarks>
@@ -31,7 +38,7 @@ namespace ServiceSample.App.CommandLine
 		[HelpHook()]
 		[ArgShortcut("h")]
 		[ArgShortcut("?")]
-		[ArgDescription("Affiche l'aide de la ligne de commande.\n")]
+		[ArgDescription("Affiche l'aide de la ligne de commande.")]
 		public bool Help { get; set; }
 
 		[ArgActionMethod]
