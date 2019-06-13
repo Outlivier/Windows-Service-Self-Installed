@@ -61,7 +61,7 @@ namespace ServiceSelfInstaller {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à La longueur du nom de service ne doit as excéder {0} caractères..
+        ///   Recherche une chaîne localisée semblable à La longueur du nom de service ne doit pas excéder {0} caractères..
         /// </summary>
         internal static string InstallArgs_Constructor_NameCheck {
             get {
@@ -72,9 +72,9 @@ namespace ServiceSelfInstaller {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Les arguments {0} de l&apos;installation sont nul. Vérifier que le constructeur approprié de la classe {1} a été appelé. .
         /// </summary>
-        internal static string InstallArgs_CreateProcessInstaller_ArgsNullEx {
+        internal static string ServiceInstallerComponent_CreateProcessInstaller_ArgsNullEx {
             get {
-                return ResourceManager.GetString("InstallArgs_CreateProcessInstaller_ArgsNullEx", resourceCulture);
+                return ResourceManager.GetString("ServiceInstallerComponent_CreateProcessInstaller_ArgsNullEx", resourceCulture);
             }
         }
         

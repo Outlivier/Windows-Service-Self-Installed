@@ -104,15 +104,6 @@ namespace ServiceSelfInstaller
 		/// <summary>Restaure l'état de l'ordinateur préalable à l'installation.</summary>
 		/// <param name="savedState"><see cref="IDictionary"/> qui contient l'état qui était celui de l'ordinateur
 		/// avant l'installation.</param>
-		/// <exception cref="ArgumentException">
-		/// Le paramètre <paramref name="savedState"/> a la valeur null. ou L’état enregistré
-		/// <see cref="IDictionary"/> peut être endommagé.
-		/// </exception>
-		/// <exception cref="System.Configuration.Install.InstallException">
-		/// Une exception s’est produite lors de la <see cref="Configuration.Install.Installer.Rollback(IDictionary)"/> phase
-		/// de l’installation. Cette exception est ignorée et la restauration continue.
-		/// Toutefois, l’ordinateur peut ne revienne pas totalement à son état initial une fois la restauration terminée.
-		/// </exception>
 		public override void Rollback(IDictionary savedState)
 		{
 			// N'est appelé qu'en cas de problème lors de l'installation. N'est pas appelé lors de la désinstallation.
@@ -177,7 +168,7 @@ namespace ServiceSelfInstaller
 		{
 			if (Args == null)
 			{
-				throw new NullReferenceException(string.Format(CultureInfo.InvariantCulture, Locale.InstallArgs_CreateProcessInstaller_ArgsNullEx, nameof(Args), nameof(ServiceInstallerComponent)));
+				throw new NullReferenceException(string.Format(CultureInfo.InvariantCulture, Locale.ServiceInstallerComponent_CreateProcessInstaller_ArgsNullEx, nameof(Args), nameof(ServiceInstallerComponent)));
 			}
 
 			return new ServiceProcessInstaller()
