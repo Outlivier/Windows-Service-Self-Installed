@@ -42,6 +42,7 @@ namespace ServiceSelfInstaller
 		/// <see cref="UserName"/> et <see cref="Password"/>. Si le nom d'utiliser et/ou le mot de passe n'est pas fourni,
 		/// Windows affichera une boîte de dialogue permettant de les saisir lors de l'installation du service.
 		/// </para>
+		/// </summary>
 		public ServiceAccount Account { get; set; } = ServiceAccount.NetworkService;
 
 		public string UserName { get; set; }
