@@ -118,9 +118,18 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="InstallArgs_Constructor_NameCheck" xml:space="preserve">
-    <value>La longueur du nom de service ne doit as excéder {0} caractères.</value>
+    <value>La longueur du nom de service ne doit pas excéder {0} caractères.</value>
   </data>
-  <data name="InstallArgs_CreateProcessInstaller_ArgsNullEx" xml:space="preserve">
+  <data name="ServiceInstallerComponent_CreateProcessInstaller_ArgsNullEx" xml:space="preserve">
     <value>Les arguments {0} de l'installation sont nul. Vérifier que le constructeur approprié de la classe {1} a été appelé. </value>
+  </data>
+  <data name="ServiceInstallerComponent_StartSC_Error" xml:space="preserve">
+    <value>L'outil Sc.exe s'est terminé avec le code d'erreur {0}.</value>
+  </data>
+  <data name="ServiceSelfInstaller_OnAfterInstall_Start" xml:space="preserve">
+    <value>Démarrage du service...</value>
+  </data>
+  <data name="ServiceSelfInstaller_OnBeforeUninstall_Stop" xml:space="preserve">
+    <value>Arrêt du service...</value>
   </data>
 </root>

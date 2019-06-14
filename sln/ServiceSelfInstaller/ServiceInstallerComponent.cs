@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Configuration.Install;
-using System.Linq;
+using System.Diagnostics;
+using System.Globalization;
 using System.Reflection;
 using System.ServiceProcess;
-using System.Threading.Tasks;
-using System.Globalization;
+using static System.FormattableString;
 
 namespace ServiceSelfInstaller
 {
@@ -27,6 +26,7 @@ namespace ServiceSelfInstaller
 			InitializeComponent();
 
 			// Bind des évènements
+			BeforeUninstall += new InstallEventHandler(OnBeforeUninstall);
 			AfterInstall += new InstallEventHandler(OnAfterInstall);
 
 			// Récupération des paramètres
@@ -45,6 +45,9 @@ namespace ServiceSelfInstaller
 			this.Args = args ?? throw new ArgumentNullException(nameof(args));
 		}
 		#endregion
+
+
+		private static void Log(string message) => Console.WriteLine(message);
 
 
 		private static void LogDebug(string message)
@@ -101,21 +104,33 @@ namespace ServiceSelfInstaller
 		/// <summary>Restaure l'état de l'ordinateur préalable à l'installation.</summary>
 		/// <param name="savedState"><see cref="IDictionary"/> qui contient l'état qui était celui de l'ordinateur
 		/// avant l'installation.</param>
-		/// <exception cref="ArgumentException">
-		/// Le paramètre <paramref name="savedState"/> a la valeur null. ou L’état enregistré
-		/// <see cref="IDictionary"/> peut être endommagé.
-		/// </exception>
-		/// <exception cref="System.Configuration.Install.InstallException">
-		/// Une exception s’est produite lors de la <see cref="Configuration.Install.Installer.Rollback(IDictionary)"/> phase
-		/// de l’installation. Cette exception est ignorée et la restauration continue.
-		/// Toutefois, l’ordinateur peut ne revienne pas totalement à son état initial une fois la restauration terminée.
-		/// </exception>
 		public override void Rollback(IDictionary savedState)
 		{
-			// TODO : Faut-il comme pour uninstall spécifier le nom du service ?
-			// Générer une erreur lors de la désinstallation pour vérifier
+			// N'est appelé qu'en cas de problème lors de l'installation. N'est pas appelé lors de la désinstallation.
 			base.Rollback(savedState);
 		}
+
+
+		private static void StartSC(string args)
+		{
+			int exitCode;
+			Log("sc " + args);
+			using (var process = new Process())
+			{
+				var startInfo = process.StartInfo;
+				startInfo.FileName = "sc";
+				startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+				startInfo.Arguments = args;
+
+				process.Start();
+				process.WaitForExit();
+
+				exitCode = process.ExitCode;
+			}
+
+			if (exitCode != 0) { throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, Locale.ServiceInstallerComponent_StartSC_Error, exitCode)); }
+		}
+
 
 		/// <summary>
 		/// Si demandé par la ligne de commande :
@@ -129,36 +144,23 @@ namespace ServiceSelfInstaller
 		/// <param name="e"><see cref="InstallEventArgs"/> qui contient les données d'événement.</param>
 		private void OnAfterInstall(object sender, InstallEventArgs e)
 		{
-			// TODO : Recovery Actions
-			// TODO : Générer une exception pour être sur que RollBack est appelé.
-			// TODO : Démarrer le service
+			//) Recovery Actions
+			if (!string.IsNullOrWhiteSpace(Args.SCFailure))
+			{
+				// A noter que l'on échappe pas les " dans le nom du service (qui nomerait un service avec des guillemets ?
+				StartSC(Invariant($"failure {Args.Name} {Args.SCFailure}")); 
+			}
 
-			//try
-			//{
-			//	if ((this.CommandLine.RecoveryActions != null))
-			//	{
-			//		RecoveryConfigure.ChangeSettings(_serviceName, this.CommandLine.RecoveryActions);
-			//		LogManager.Instance.LogSlow(LogLevel.Info, string.Format("Recovery actions configured for {0}.", _serviceName));
-			//	}
-			//}
-			//catch (Exception ex)
-			//{
-			//	LogManager.Instance.LogSlow(LogLevel.Error, string.Format("Error when configuring recovery actions for {0} !", _serviceName));
-			//}
-
-			// TODO : Démarrage du service
-			//try
-			//{
-			//	if ((this.CommandLine.Start))
-			//	{
-			//		ServiceController sc = new ServiceController(_serviceName);
-			//		sc.Start();
-			//	}
-			//}
-			//catch (Exception ex)
-			//{
-			//	LogManager.Instance.LogSlow(LogLevel.Error, string.Format("Error when starting {0} !", _serviceName));
-			//}
+			//) Démarre le service
+			if (Args.Start)
+			{
+				Log(Locale.ServiceSelfInstaller_OnAfterInstall_Start);
+				using (var sc = new ServiceController(Args.Name))
+				{
+					sc.Start();
+					// Inutile d'attendre le démarrage du service
+				}
+			}
 		}
 
 
@@ -166,7 +168,7 @@ namespace ServiceSelfInstaller
 		{
 			if (Args == null)
 			{
-				throw new NullReferenceException(string.Format(CultureInfo.InvariantCulture, Locale.InstallArgs_CreateProcessInstaller_ArgsNullEx, nameof(Args), nameof(ServiceInstallerComponent)));
+				throw new NullReferenceException(string.Format(CultureInfo.InvariantCulture, Locale.ServiceInstallerComponent_CreateProcessInstaller_ArgsNullEx, nameof(Args), nameof(ServiceInstallerComponent)));
 			}
 
 			return new ServiceProcessInstaller()
@@ -204,7 +206,23 @@ namespace ServiceSelfInstaller
 		#endregion
 
 
-		#region Uninstall	
+		#region Uninstall
+		/// <summary>
+		/// Sous Windows 10, la désinstallation ne fonctionne pas si le service est démarré.
+		/// </summary>
+		private void OnBeforeUninstall(object sender, InstallEventArgs e)
+		{
+			Log(Locale.ServiceSelfInstaller_OnBeforeUninstall_Stop);
+			using (var sc = new ServiceController(this.ServiceName))
+			{
+				if ((sc.Status != ServiceControllerStatus.Stopped) && (sc.Status != ServiceControllerStatus.StopPending))
+				{
+					sc.Stop();
+				}
+				sc.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(30));
+			}
+		}
+
 		public override void Uninstall(IDictionary savedState)
 		{
 			Installers.Add(new ServiceProcessInstaller());

@@ -38,7 +38,6 @@ namespace ServiceSelfInstaller
 			using (var ti = new TransactedInstaller())
 			{
 				ti.Installers.Add(installer);
-				// TODO: logFilePath
 				ti.Context = new InstallContext(logFilePath: null, commandLine: new string[] { "/assemblypath=" + installer.ServiceAssemblyPath });
 				ti.Uninstall(savedState: null);
 			}

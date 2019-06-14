@@ -61,7 +61,7 @@ namespace ServiceSelfInstaller {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à La longueur du nom de service ne doit as excéder {0} caractères..
+        ///   Recherche une chaîne localisée semblable à La longueur du nom de service ne doit pas excéder {0} caractères..
         /// </summary>
         internal static string InstallArgs_Constructor_NameCheck {
             get {
@@ -72,9 +72,36 @@ namespace ServiceSelfInstaller {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Les arguments {0} de l&apos;installation sont nul. Vérifier que le constructeur approprié de la classe {1} a été appelé. .
         /// </summary>
-        internal static string InstallArgs_CreateProcessInstaller_ArgsNullEx {
+        internal static string ServiceInstallerComponent_CreateProcessInstaller_ArgsNullEx {
             get {
-                return ResourceManager.GetString("InstallArgs_CreateProcessInstaller_ArgsNullEx", resourceCulture);
+                return ResourceManager.GetString("ServiceInstallerComponent_CreateProcessInstaller_ArgsNullEx", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à L&apos;outil Sc.exe s&apos;est terminé avec le code d&apos;erreur {0}..
+        /// </summary>
+        internal static string ServiceInstallerComponent_StartSC_Error {
+            get {
+                return ResourceManager.GetString("ServiceInstallerComponent_StartSC_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Démarrage du service....
+        /// </summary>
+        internal static string ServiceSelfInstaller_OnAfterInstall_Start {
+            get {
+                return ResourceManager.GetString("ServiceSelfInstaller_OnAfterInstall_Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Arrêt du service....
+        /// </summary>
+        internal static string ServiceSelfInstaller_OnBeforeUninstall_Stop {
+            get {
+                return ResourceManager.GetString("ServiceSelfInstaller_OnBeforeUninstall_Stop", resourceCulture);
             }
         }
     }

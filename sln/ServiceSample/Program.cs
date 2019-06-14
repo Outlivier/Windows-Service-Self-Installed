@@ -1,6 +1,7 @@
 ﻿using PowerArgs;
 using ServiceSample.App.CommandLine;
 using ServiceSelfInstaller;
+using System;
 using System.Configuration;
 using System.Reflection;
 using System.ServiceProcess;
@@ -9,7 +10,7 @@ namespace ServiceSample
 {
 	static class Program
 	{
-		public static string ServiceName => ConfigurationManager.AppSettings[ServiceInstallRunner.ServiceNameAppSettingsKey] ?? "AServiceSample";
+		public static string ServiceName => ConfigurationManager.AppSettings[ServiceInstallRunner.ServiceNameAppSettingsKey] ?? "1_ServiceSample";
 		public static ServiceInstallRunner Installer { get; set; } = new ServiceInstallRunner();
 
 
@@ -21,7 +22,6 @@ namespace ServiceSample
 			var exitCode = ExitCode.Error;
 			var runMode = RunMode.Canceled;
 			ArgAction<App.CommandLine.Args> action = null;
-
 
 			//) Parse la ligne de commande
 			// Avec PowerArgs, on ne peut pas avoir une action par défaut => si args est empty, action = exe
@@ -65,7 +65,6 @@ namespace ServiceSample
 						ServiceBase.Run(ServicesToRun);
 					}
 					break;
-					// Default = Cancelled, does nothing
 			}
 
 			//) Fin
