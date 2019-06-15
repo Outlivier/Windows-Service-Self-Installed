@@ -8,7 +8,7 @@ using System.ServiceProcess;
 
 namespace ServiceSample
 {
-	static class Program
+	public static class Program
 	{
 		public static string ServiceName => ConfigurationManager.AppSettings[ServiceInstallRunner.ServiceNameAppSettingsKey] ?? "1_ServiceSample";
 		public static ServiceInstallRunner Installer { get; set; } = new ServiceInstallRunner();
@@ -17,7 +17,7 @@ namespace ServiceSample
 		/// <summary>
 		/// Point d'entrée principal de l'application.
 		/// </summary>
-		static int Main(string[] args)
+		public static int Main(string[] args)
 		{
 			var exitCode = ExitCode.Error;
 			var runMode = RunMode.Canceled;

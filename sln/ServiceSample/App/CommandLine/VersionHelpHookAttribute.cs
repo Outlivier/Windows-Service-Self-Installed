@@ -17,7 +17,8 @@ namespace ServiceSample.App.CommandLine
 			if (true.Equals(context?.CurrentArgument.RevivedValue))
 			{
 				var bootInfos = new AssemblyInformations(Assembly.GetExecutingAssembly());
-				Console.WriteLine(Invariant($"{bootInfos.Title} {bootInfos.Version}"));
+				string version = Invariant($"{bootInfos.Title} {bootInfos.Version}");
+				PowerArgs.ConsoleProvider.Current.WriteLine(new ConsoleString(version, ConsoleColor.Green));
 			}
 		}
 	}

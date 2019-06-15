@@ -38,3 +38,4 @@ using System.Runtime.InteropServices;
 //
 [assembly: System.CLSCompliant(false)]
 [assembly: System.Resources.NeutralResourcesLanguage("fr")]
+[assembly: InternalsVisibleTo("ServiceTests")]
