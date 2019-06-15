@@ -52,6 +52,7 @@ namespace ServiceTests
 			//) Assert
 			ConsoleOutput.Should().HaveCount(1);
 			ConsoleOutput[0].Should().MatchRegex(@"^ServiceSample (\d+\.){1,3}\d+$");
+			exitCode.Should().Be((int)ServiceSample.App.CommandLine.ExitCode.Canceled);
 		}
 		#endregion
 	}
