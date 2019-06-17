@@ -22,7 +22,10 @@ namespace ServiceSelfInstaller
 			using (var ti = new TransactedInstaller())
 			{
 				ti.Installers.Add(installer);
-				ti.Context = new InstallContext(logFilePath: null, commandLine: new string[] { "/assemblypath=" + installer.ServiceAssemblyPath });
+				// See https://docs.microsoft.com/fr-fr/dotnet/framework/tools/installutil-exe-installer-tool for command line help
+				ti.Context = new InstallContext(
+					logFilePath: null,
+					commandLine: new string[] { "/assemblypath=" + installer.ServiceAssemblyPath, "/logToConsole=true", "/showCallStack" });
 				ti.Install(new Hashtable());
 			}
 		}
@@ -38,7 +41,10 @@ namespace ServiceSelfInstaller
 			using (var ti = new TransactedInstaller())
 			{
 				ti.Installers.Add(installer);
-				ti.Context = new InstallContext(logFilePath: null, commandLine: new string[] { "/assemblypath=" + installer.ServiceAssemblyPath });
+				// See https://docs.microsoft.com/fr-fr/dotnet/framework/tools/installutil-exe-installer-tool for command line help
+				ti.Context = new InstallContext(
+					logFilePath: null,
+					commandLine: new string[] { "/assemblypath=" + installer.ServiceAssemblyPath, "/logToConsole=true", "/showCallStack" });
 				ti.Uninstall(savedState: null);
 			}
 		}
